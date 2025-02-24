@@ -1,7 +1,10 @@
 package com.bridgelabz.greetings.controller;
 
+import com.bridgelabz.greetings.model.Greeting;
 import com.bridgelabz.greetings.service.GreetingService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,24 +17,22 @@ public class GreetingAppController {
         this.greetingService = greetingService;
     }
 
-    @GetMapping
-    public Map<String, String> getGreeting(@RequestParam(required = false) String firstName, 
-                                           @RequestParam(required = false) String lastName) {
-        return Map.of("message", greetingService.getGreetingMessage(firstName, lastName));
+    @GetMapping("/{id}")
+    public Map<String, String> getGreetingById(@PathVariable String id) {
+        return Map.of("message", "Greeting with ID: " + id);
     }
 
     @PostMapping
-    public Map<String, String> postGreeting(@RequestBody Map<String, String> request) {
+    public Greeting postGreeting(@RequestBody Map<String, String> request) {
         String firstName = request.get("firstName");
         String lastName = request.get("lastName");
-        return Map.of("message", greetingService.getGreetingMessage(firstName, lastName));
+        String message = greetingService.getGreetingMessage(firstName, lastName);
+        return greetingService.saveGreeting(message);
     }
 
-    @PutMapping
-    public Map<String, String> putGreeting(@RequestBody Map<String, String> request) {
-        String firstName = request.get("firstName");
-        String lastName = request.get("lastName");
-        return Map.of("message", "Updated Greeting", "updated", greetingService.getGreetingMessage(firstName, lastName));
+    @GetMapping("/all")
+    public List<Greeting> getAllGreetings() {
+        return greetingService.getAllGreetings();
     }
 
     @DeleteMapping
