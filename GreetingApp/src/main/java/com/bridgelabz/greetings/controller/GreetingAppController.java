@@ -1,11 +1,10 @@
 package com.bridgelabz.greetings.controller;
 
 import com.bridgelabz.greetings.model.Greeting;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
-
 import com.bridgelabz.greetings.service.GreetingService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -60,5 +59,14 @@ public class GreetingAppController {
     @GetMapping("/all")
     public List<Greeting> getAllGreetings() {
         return greetingService.getAllGreetings();
+    }
+
+    @PutMapping("/{id}")
+    public Greeting updateGreeting(@PathVariable Long id, @RequestParam String message) {
+        Greeting updatedGreeting = greetingService.updateGreeting(id, message);
+        if (updatedGreeting == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Greeting with ID " + id + " not found");
+        }
+        return updatedGreeting;
     }
 }
