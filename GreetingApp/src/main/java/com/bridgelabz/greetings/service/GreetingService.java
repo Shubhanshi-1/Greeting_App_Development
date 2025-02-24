@@ -1,42 +1,41 @@
 package com.bridgelabz.greetings.service;
 
+import com.bridgelabz.greetings.model.Greeting;
+import com.bridgelabz.greetings.repository.GreetingRepository;
 import org.springframework.stereotype.Service;
-import com.bridgelabz.greetings.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.bridgelabz.greetings.repository.*;
-import org.springframework.context.annotation.ComponentScan;
 
-
+import java.util.List;
+import java.util.Optional;
 
 @Service
-@ComponentScan(basePackages = "com.bridgelabz.demo.repository")
 public class GreetingService {
-	
-	@Autowired
-    private GreetingRepository greetingRepository;
+
+    private final GreetingRepository greetingRepository;
+
+    public GreetingService(GreetingRepository greetingRepository) {
+        this.greetingRepository = greetingRepository;
+    }
 
     public String getGreetingMessage() {
-        return "Hello from BridgeLabz";
+        return "Hello, Welcome to the Greeting App!";
     }
-    
+
     public String displayingGreeting(String firstName, String lastName) {
-        if (firstName != null && lastName != null) {
-            return "Hello " + firstName + " " + lastName + " from BridgeLabz";
-        } else if (firstName != null) {
-            return "Hello " + firstName + " from BridgeLabz";
-        } else if (lastName != null) {
-            return "Hello " + lastName + " from BridgeLabz";
-        } else {
-            return "Hello World";
-        }
+        return "Hello, " + (firstName != null ? firstName : "Guest") +
+               (lastName != null ? " " + lastName : "") + "!";
     }
-    
+
     public Greeting saveGreeting(String message) {
-        Greeting greeting = new Greeting(message);
+        Greeting greeting = new Greeting();
+        greeting.setMessage(message);
         return greetingRepository.save(greeting);
     }
-    
+
     public Greeting getGreetingById(Long id) {
         return greetingRepository.findById(id).orElse(null);
+    }
+
+    public List<Greeting> getAllGreetings() {
+        return greetingRepository.findAll();
     }
 }
