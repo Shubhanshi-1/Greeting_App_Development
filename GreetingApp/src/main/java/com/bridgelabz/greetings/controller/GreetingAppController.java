@@ -69,4 +69,13 @@ public class GreetingAppController {
         }
         return updatedGreeting;
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteGreetingById(@PathVariable Long id) {
+        boolean isDeleted = greetingService.deleteGreeting(id);
+        if (!isDeleted) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Greeting with ID " + id + " not found");
+        }
+        return "Greeting with ID " + id + " has been deleted successfully";
+    }
 }
